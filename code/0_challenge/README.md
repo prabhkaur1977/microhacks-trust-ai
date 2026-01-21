@@ -25,7 +25,7 @@ We will set up the initial environment for you to build on top of during your Mi
 * Ensure the correct OS is selected
 * Powershell 7+ with AZ module (Windows only): Powershell, AZ Module
 * Git: Download Git
-* Python 3.11: Download Python
+* Python 3.13: Download Python
 <br>
 
 ## Recommended Regions
@@ -37,13 +37,19 @@ We will set up the initial environment for you to build on top of during your Mi
 * East US (eastus)
 * East US 2 (eastus2)
 
-See Regional Selection - gpt-4o, 2024-05-13. If you are having issues with the deployment
+<br>
+
+* Optimal Region for availability should be WestEurope for Document Intelligence and Sweden Central for Infrastructure and Sweden Central for OpenAiLocation (Optimal due to OpenAI Availability)
+<br>
+
+* Alternative Region for availability should be West US 2 for Document Intelligence and West US 2 for Infrastructure and West US 3 for OpenAiLocation
+
 <br>
 
 ## Deploy the Azure Resources
 
 1. Open a terminal window and confirm prerequisites are complete
-1. Clone the RAGCHAT repo into your local environment by running the following command:
+1. Clone the ```azure-search-openai-demo``` repo into your local environment by running the following command:
 
     ```bash
     git clone https://github.com/Azure-Samples/azure-search-openai-demo.git
@@ -55,13 +61,19 @@ See Regional Selection - gpt-4o, 2024-05-13. If you are having issues with the d
     azd auth login
     ```
 
+1. Go into the repo you cloned for azure-search-openai-demo.
+
+   ```bash
+    cd ./azure-search-openai-demo
+    ```
+
 1. Create a new azd environment
 
     ```bash
     azd env new
     ```
 
-    Enter a name that will be used for the resource group.  This will create a new folder `.azure` folder and set it as the active environment for any calls to azd going forward.
+    Enter a name that will be used for the resource group.  This will create a new `.azure` folder and set it as the active environment for any calls to azd going forward.
 
 1. Configure the environment variables to setup the AI Judge or LLM evaluation model in your project.
 
@@ -74,6 +86,11 @@ See Regional Selection - gpt-4o, 2024-05-13. If you are having issues with the d
     ```bash
     azd env set AZURE_OPENAI_EVAL_DEPLOYMENT_CAPACITY 100 
     ```
+1.  Setup Microsoft Foundry Project Endpoint in Environment file
+
+    ```bash
+    azd env set AZURE_AI_PROJECT_ENDPOINT abc
+    ```
 
 1. Run the bicep scripts with the following command:
 
@@ -81,9 +98,9 @@ See Regional Selection - gpt-4o, 2024-05-13. If you are having issues with the d
     azd up
     ```
 
-    THis will provision Azure resources and deploy this sample to those resources, including building the search index based on the files found in the `./data` folder.  
+    This will provision Azure resources and deploy this sample to those resources, including building the search index based on the files found in the `./data` folder.  
 
-1. Open URL for RAGCHAT applicaiton printed in the terminal consule similar to the below picture. Ask it a few questions per cards to ensure it return results.<br>
+1. Open URL for RAGCHAT application printed in the terminal console similar to the below picture. Ask it a few questions per cards to ensure it return results.<br>
 <br>
 <br>
 
@@ -91,25 +108,26 @@ See Regional Selection - gpt-4o, 2024-05-13. If you are having issues with the d
 <br>
 <br>
 
-## Deploy the Evaluation environment 
+## Deploy the Evaluation environment
 
-1. Make a new Python virtual environment and activiate it.  
+1. Make a new Python virtual environment and activate it.  
 
     ```bash
     python -m venv .evalenv
     ```
-
+1. Activate Python Virtual Environment 
     ```bash
     source .evalenv/bin/activate
     ```
-1. Replace the requirements file in the ```evals/requirements.txt``` with the one in this repo before running this command.
+1. Upload requirements file from Microhack repo to Azure-Search-OpenAI-Demo repo.  Microhack directory is ```/code/0_challenge/requirements.txt``` to ```/evals``` directory in RAGCHAT repo.  It is critical this file is in the evals directory and replace existing file.
+    
     ```bash
-    pip install -r requirements.txt
+    pip install -r evals/requirements.txt
     ```
 
 ## Upgrade your Azure OpenAI resources to Foundry
 
-1. From Azure Portal, go to resource group CH0, find and go to Azure OpenAI service created in CH0.
+1. From Azure Portal, find and go to Azure OpenAI service created in CH0.
 
     ![Alt text](/media/aoirg.png "Azure OpenAI Resource Group")
 
@@ -136,17 +154,40 @@ See Regional Selection - gpt-4o, 2024-05-13. If you are having issues with the d
 
     ![Alt text](/media/Project_Connections.jpg "Project Connections")
 
-1. Setup your Foundry Project to have access rights to the storage account thru a managed Identity.
+1. Setup your Foundry Project to have access rights to the storage account thru the Foundry managed identitiy.  First go into storage account and open Access Control (IAM) tab.  Click on Add button and select Add role assignment
 
-    [Grant Foundry access to Storage](https://learn.microsoft.com/en-us/azure/ai-foundry/how-to/evaluations-storage-account?view=foundry-classic)
+    ![Alt text](/media/storageIAM.jpg "Storage Assignment")
+
+1. Type into Job Function Roles search bar ```Storage Blob Data Contributor``` and highlight role name in menu
+
+    ![Alt text](/media/StorageBlobContributor.jpg "Contributor role")
+
+1. Select Managed Identity for Assign access to and click on Select Members.  You will want to select all System Managed Identities from the drop down menu for your subscription.  Find the Foundry project you've created and select it.  Click on Review & Assign twice to assign the Foundry Project Managed Identity to the Storage account.
+
+    ![Alt text](/media/StorageMI.jpg "Contributor role")
+
+<br>
+<br>
+
+## Upload delta files for Microhack to Azure-Search-OpenAI-Demo Application repo
+
+1. There are three python scripts for evaluations in the 0_challenge directory.  They are ```evaluatemh.py```, ```safety_evaluationmh.py``` and ```redteammh.py```.  Upload these files into the ```/evals``` directory in the Azure-Search-OpenAI-Demo repo.  These scripts will use the Azure Evaluation SDK and post the results into the Azure Foundry.  The scripts without the mh suffix are the original files and required for continuous evaluations.  We want to keep both files
+
+1. There is one test file ```ground_truth_test.jsonl``` data set with two questions in the 0_challenge directory.  Upload this file into the ```/evals``` directory in the Azure-Search-OpenAI-Demo repo.  It is critical you upload this file since the python scripts are hard-coded with this file name and uploading it will shorten the runtime of the evaluations.
+
+1. Open the environment files in the /.azure/<resource-group> directory and open the file.  Find the parameter called, ```AZURE_AI_PROJECT_ENDPOINT```.  Insert the Foundry project endpoint from the portal into this environment variable.
+
+1. Replace the ```evaluate.yaml``` in the 0_challenge directory with the same file in the Azure-Search-OpenAI-Demo repo.  The file directory in the Azure-Search-OpenAI-Demo repo is ```./.github/workflow```
+
 <br>
 <br>
 
 
 ## Success Criteria
 1. Click on prompt cards to see if it returns answers to these questions. 
-1. Open Foundry Project to see model deployments
-1. Review Project Connections for right permissions
+1. Open Foundry Project to see model deployments.  Search for 'eval' as a model name
+1. Review Project Connections for right permissions per above screenshot
+1. Click on Monitor icon and click on the Resource Usage Tab.  For Model deployment, select ```text-embedding-3-large```.  You should see numbers for Total requests and Total Token count
 <br>
 
 ## Run the workshop
@@ -154,8 +195,9 @@ See Regional Selection - gpt-4o, 2024-05-13. If you are having issues with the d
 After you complete all the success criteria, follow the steps in the [Challenge 1 -- Responsible AI](/code/1_challenge/README.md) to run the workshop. 
 <br>
 
+
 ## Related Azure Technology
-* Application Insight
+* Application Insights
 * Azure OpenAI
 * Container App & Registry
 * Document Intelligence
