@@ -17,7 +17,7 @@ The Microhack event is divided into several key challenges, each carefully craft
 ### Core Assets
 * [Microhack Repository](https://github.com/DataSciNAll/trustworthy_ai)
 * [Microhack Deck - Trustworthy AI](docs/Microhack_Deck_TrustworthyAI.pptx)
-* [Microhack Challenges](docs/Microhack%20Challenges%20-%20Trustworthy%20AI_UPDATE.pdf)
+* [Microhack Challenges](docs/Microhack_Challenge%20-%20Trustworthy%20AI_UPDATE.pdf)
 
 ### What you will learn
 
@@ -29,7 +29,7 @@ To provide attendees with guidance and understanding on the Microhack goals, con
 
 ## Microhack Challenges
 
-To get started with this workshop, open the current [Microhack Challenges](docs/Microhack%20Challenges%20-%20Trustworthy%20AI_UPDATE.pdf).  For a more self-service guidebook, open the individual challenges below for coaches notes.
+To get started with this workshop, open the current [Microhack Challenges](docs/Microhack_Challenge%20-%20Trustworthy%20AI_UPDATE.pdf).  For a more self-service guidebook, open the individual challenges below for coaches notes.
 
 There are four challenges for this workshop.  They are;
 
