@@ -15,9 +15,9 @@ The Micohack event is designed to engage technical roles through a condensed, ha
 The Microhack event is divided into several key challenges, each carefully crafted to test and expand the participants' proficiency with Microsoft's suite of tools. These challenges are not only technical in nature but also reflect real-world scenarios that businesses face, providing a comprehensive understanding of how to apply theoretical knowledge practically.
 
 ### Core Assets
-* [Microhack Repository](https://github.com/microsoft/microhacks-trust-ai)
+* [Microhack Repository](https://github.com/DataSciNAll/trustworthy_ai)
 * [Microhack Deck - Trustworthy AI](docs/Microhack_Deck_TrustworthyAI.pptx)
-* [Microhack Challenges](docs/Microhack%20Challenges%20-%20Trustworthy%20AI_UPDATE.pdf)
+* [Microhack Challenges](docs/Microhack_Challenge%20-%20Trustworthy%20AI_UPDATE.pdf)
 
 ### What you will learn
 
@@ -29,7 +29,7 @@ To provide attendees with guidance and understanding on the Microhack goals, con
 
 ## Microhack Challenges
 
-To get started with this workshop, open the current [Microhack Challenges](docs/Microhack%20Challenges%20-%20Trustworthy%20AI_UPDATE.pdf).  For a more self-service guidebook, open the individual challenges below for coaches notes.
+To get started with this workshop, open the current [Microhack Challenges](docs/Microhack_Challenge%20-%20Trustworthy%20AI_UPDATE.pdf).  For a more self-service guidebook, open the individual challenges below for coaches notes.
 
 There are four challenges for this workshop.  They are;
 
@@ -93,3 +93,7 @@ trademarks or logos is subject to and must follow
 [Microsoft's Trademark & Brand Guidelines](https://www.microsoft.com/en-us/legal/intellectualproperty/trademarks/usage/general).
 Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship.
 Any use of third-party trademarks or logos are subject to those third-party's policies.
+
+# Contributors to this Microhack
+
+We are grateful to the hard-work and thought leadership done by Pamela Fox and Matt Gotteiner. We were inspired and informed by their work.  We have reused their https://aka.ms/ragchat repo and studied their podcast series RAG Deep dive http://aka.ms/ragdeepdive.  We highly recommend to watch this content when preparing your applications to move into production.
