@@ -1,333 +1,237 @@
 # Challenge 1: Responsible AI - Designing a Reliable & Ethical Approach
 
 ## Overview
-Contoso Electronics is piloting an internal HR Q&A applications where employees can ask about benefits and policies. The bot retrieves answers from policy documents with citations. Before full deployment, the team must ensure the AI behaves responsibly. In this challenge, participants act as AI developers conducting an AI Impact Assessment and initial testing using Azure AI FoundryIQ, Control Plane, and Chat Playground. 
+
+Contoso Electronics is piloting an internal HR Q&A application where employees can ask about benefits and policies. The chat agent retrieves answers from policy documents with citations. Chat applications are typically graded on functionality and not impact on end-users. We want to help developers and sponsors gain trust in their applications in the early stages of the development cycle while gaining confidence in its feasibility. In this challenge, we will work in the Planning phase to prototype our application through model selection, context engineering, and manual evaluation. The purpose of the planning phase is to green light our concept into a working application and understand its strengths and limitations to better design it for the Build Phase.
+
+<br>
 
 ## Tools & Config Needed
-Azure AI FoundryIQ (agent creation + evaluation) 
 
-Control Plane (deployment governance and monitoring) 
+1. Microsoft Foundry Classic Portal (General Available)
 
-Azure AI Search (indexed data) 
+1. Azure AI Search (Indexed Data)
 
-Azure OpenAI model deployment 
+1. Azure OpenAI model deployment (GPT-4.1-mini, GPT-4o and text-embedding-3-large)
 
-Ground truth Q&A list (spreadsheet or FoundryIQ evaluation feature) 
+1. Ground truth Q&A list (JSONL file or Synthetic Data Generation)
+
+---
+
+<br>
+
+## Key Tasks for Challenge
+
+- Review models in model catalog to ensure best models deployed to your environment for your specific use case
+- Configure chat playground to leverage the best data (context) for your application
+- Experiment in Chat Playground with ground truth data and manually evaluate results
+- Conduct Impact Assessment to ensure AI behaves responsibly and ownership and metrics are identified to mitigate risk
+- Build guardrails in Playground to enforce safety, groundedness and prompt protections
+
+---
+
+<br>
 
 ## Lab Activities
 
-From Azure Portal, go to resource group just created in CH0, find and go to Azure OpenAI service . 
+## Lab 1 – Microsoft Foundry Agent Playground
+
+Business users and developers have been working conceptually on a use case but are not certain how the Large Language Model (LLM) will respond to user input. In the planning phase, we want to quickly set up an environment to determine feasibility and evaluate the quality of the responses. Microsoft Foundry provides the Agent Playground, where you can set up the agent, connect it to Azure AI Search, and send test questions into the chat interface to see the LLM responses. This first lab will be a set of instructions on how to set up the environment and input your ground truth questions to determine feasibility in the platform and confidence in the responses.
+
+### Key Tasks
+
+- Review models in model catalog to ensure best models deployed to your environment for your specific use case
+- Configure chat playground to leverage the best data (context) for your application
+- Experiment in Chat Playground with ground truth data and manually evaluate results
+
+---
+
+### Lab 1 – Instructions for Model Selection
+
+1. Go into the Foundry project via the Azure Portal
+
+    ![Alt text](/media/CH1_Foundry.png "Foundry Project")
+
+1. Ensure your Foundry portal is in classic mode and you are at the Foundry project interface.  
+
+    ![Alt text](/media/CH1_FoundryClassic.png "Foundry Project Classic")
+
+1. Click on Model Catalog to inspect the models available to you.  For this Microhack we are leveraging three models, gpt-4.1-mini, gpt-4o and text-embedding-3-large.  Go into model catalog to review their model cards to understand what use cases they support.  Click on details and go into benchmarks.
+
+    ![Alt text](/media/CH1_MCatalog.png "Foundry Model Catalog")
+
+1. For benchmarks tab, click on ```Compare with more models``` and remove all models that are not part of this hack and add the extra one that is missing. The benchmark chart should look like this.
+
+    ![Alt text](/media/CH1_Benchmarks.png "Model Benchmarks")
+
+1. Identify which model will be used for model evaluations, chat application and search engine based on the results of this benchmark test and why based on capabilities.
+
+    ![Alt text](/media/CH1_ModelGrid.png "Model Grid")
+
+---
+
+### Lab 1 – Instructions for Agent Evaluation
+
+1. Go to the command line terminal in codespaces and submit this script to build an agent.  
+
+    ```bash
+    python ./scripts/03_create_agent.py
+    ```
+
+1. Click on Playgrounds and select the Agent playground from the menus
+
+    ![Alt text](/media/CH1_Playground.png "Agent Playground")
+
+1. A screen will appear called Agent Playground.  Select the gpt-4.1-mini model for your chat application as discussed in model selection.
+
+    ![Alt text](/media/Ch1_modeldeployment.png "Model Deployment")
+
+1. Define the system message for the Agent in the Instructions section.  A good example is ```You must answer only HR benefits—related questions such as leave policies, PTO, parental leave, insurance, perks, holidays, and HR processes.```
+
+1. Setup the knowledge base by clicking the Add button.  You will want to leverage Azure AI Search as the data source.  
+
+    ![Alt text](/media/CH1_knowledgebase.png "Azure Search")
+
+1. Lastly, it will ask you to connect to an index already in the project.  There is only one option for Project index and for Search type choose semantic.  The reason for one option is due to the project connections.
+
+    ![Alt text](/media/CH1_IndexSetup.png "IndexSetup")
+
+1. Test your agent- Ask some sample questions, available here - (https://github.com/Azure-Samples/azure-search-openai-demo/blob/main/evals/ground_truth.jsonl)
+
+    ![Alt text](/media/CH1_Agentchat.png "Agent Chat")
+
+1. Compare the results with your ground truth data to see if agent is able to answer your questions sufficiently.
+
+---
 
 <br>
 
-![Alt text](/media/CH1_Resources.png "Resources")
-<br>
+## Lab 2 – Responsible AI Impact Assessment
 
-Open the Azure Open AI resource in Foundry.
+Early in the Planning phase, an [Impact Assessment](https://msblogs.thesourcemediaassets.com/sites/5/2022/06/Microsoft-RAI-Impact-Assessment-Template.pdf) helps govern the Generative AI application. In this lab, an example Impact assessment is shared with you to review.  Review the assessment and for each risk identify the quality or safety metrics that are in scope.
 
-<br>
+Conducting this Responsible AI Impact Assessment not only mitigates risks but also builds confidence among stakeholders and users. Employees will trust the HR assistant more knowing it’s been thoughtfully vetted, and your organization can deploy it knowing that ethical and legal considerations have been addressed up front. This thorough, proactive approach exemplifies Responsible AI in practice – delivering the benefits of AI (quick HR answers and improved productivity) while minimizing potential downsides through careful planning and oversight.  Now that the Impact Assessment is drafted with risks and mitigations, it needs to be reviewed and signed off by the appropriate stakeholders before the HR assistant goes live. Once the Impact Assessment is approved, the next step is to validate the agent’s real-world performance through manual evaluation.
 
-![Alt text](/media/CH1_Foundry.png "Foundry")
-<br>
- 
+---
 
-Go to Home, and then click on the "Get Started" button to get to the 'Azure OpenAI Service' to 'Microsoft Foundry' migration wizard.
+### Lab 2 – Instructions
 
-<br>
+* There are four risks in the impact assessment.  Review each risk and compare them against the quality & safety metrics setup in Foundry as evaluators.  This workflow will help you in the BUILD phase to setup evaluations and monitors to ensure the application is in compliance with your standards.
 
-![Alt text](/media/CH1_AzureOpenAI.png "AzureOpenAI")
-<br>
+---
 
+#### Impact Assessment Sample
 
-Click on Next.
+1. Identified Risk: Outdated or incorrect policy info (agent might give obsolete answers if documents aren’t updated)
 
-<br>
+	Mitigation Strategy
+	* Schedule regular updates of the HR policy index (e.g., after any HR policy change).
+	* Implement a content update checklist with HR team for new/changed policies.– Include policy last-updated timestamps in answers, if feasible, to flag potentially old info.
 
-![Alt text](/media/CH1_Migration.png "Migration")
-<br>
+	Owner Accountable
+	* HR Knowledge Manager (ensures documents & index stay current)	
 
+2. Identified Risk: Biased or uneven answers (e.g., gendered language or differing info for different groups)
 
-Click on "Confirm" and create a project-
+	Mitigation Strategy:
+	* Review and revise policy wording for inclusive language (e.g., use “primary caregiver” instead of “mother”).
+	* Add system prompt guidance to use neutral tone and equal detail for all users.– Test with diverse query phrasing (male vs female perspective, etc.) and verify consistent responses.
 
-<br>
+	Owner Accountable:
+	* AI Developer (updates prompts & tests); HR Policy Analyst (reviews content for bias)	
 
-![Alt text](/media/CH1_CreateProject.png "CreateProject")
-<br>
+3. Identified Risk: Personal data exposure (user asks for individual’s info or system reveals PII)
 
-Refer this documentation :
- https://learn.microsoft.com/en-us/azure/ai-foundry/how-to/upgrade-azure-openai?view=foundry-classic&tabs=portal#how-to-upgrade
+	Mitigation Strategy:	
+	* Restrict knowledge sources to non-PII documents only (no personal files indexed).
+	* Model instructed to refuse requests for personal/sensitive data.
+	* Enable content filter/DLP for PII (e.g., detect patterns like SSN, phone # in outputs).– Test queries asking for private data to ensure the agent safely refuses.
 
- 
-With the 2026 Foundry project rollout, enterprises get far more than just models.
-You’ll now have access to agentic workflows, a broader model catalog, the Foundry SDK, and enhanced monitoring, observability, and evaluation capabilities - all designed to support multi‑agent architectures at scale. 
-Your Azure OpenAI resource will be upgraded to the Microsoft Foundry resource
+	Owner Accountable:
+	* Solution Architect / Privacy Officer (ensures data scope and compliance)
 
-<br>
+4. Identified Risk: Misuse or unsafe requests (attempts to get the bot to violate policies or produce harmful content)
 
-![Alt text](/media/CH1_Upgrade.png "Upgrade")
-<br>
+	Mitigation Strategy:	
+	* Employ Azure AI Content Safety and Foundry guardrails (already active) ] to block disallowed content.
+	* Keep system and safety prompts in place to enforce refusals for out-of-scope questions.
+	* Conduct red-team testing (prompt injections, extreme inputs) and adjust safeguards if any gap is found.– Log and review misuse attempts to continuously improve defenses.
 
+	Owner Accountable:
+	* AI Engineering Lead (sets guardrail configs and reviews security logs)	
 
-See your Foundry endpoint here, click on "Start building" - 
-<br>
-
-![Alt text](/media/CH1_FoundryHome.png "FoundryHome")
-<br>
-
-
-On the next page, expand the Start building dropdown, and click on "Create Agent"-
-
-<br>
-
-![Alt text](/media/CH1_CreateAgent.png "CreateAgent")
-<br>
-
-Give a name and create the agent-
+---
 
 <br>
 
-![Alt text](/media/CH1_Agentname.png "Agentname")
-<br>
+## Lab 3 – Guardrails and Evaluations
 
-Go to the Models tab, you should be able to see all the deployed models under the 'Deployed' tab.
+### Objective
 
-<br>
+Configure guardrail policies and run automated evaluations in Microsoft Foundry to ensure your Agent operates safely, complies with organizational standards, and delivers accurate, grounded, and reliable responses before deployment.
 
-![Alt text](/media/CH1_Models.png "Models")
-<br>
+### Key Tasks
 
+- Create a Guardrail Policy using Foundry’s Compliance workspace to enforce content safety filters, prompt shields, and groundedness checks.
+- Configure policy scope and exceptions at the subscription or resource group level to control which model deployments must comply.
+- Run an automated evaluation job to measure relevance, groundedness, safety, and policy compliance of the Agent’s responses.
+- Analyze evaluation metrics and results, including failed cases, reasoning traces, and quality indicators.
 
-If you want to deploy any additional model of your choice, click on 'Deploy base model' and you should be able to explore all the available models and deploy any model of your choice -
+---
 
-<br>
+### Lab 3 – Instructions
 
-![Alt text](/media/CH1_ModelCatalog.png "Model Catalog")
-<br>
+1. Create a guardrail policy- https://learn.microsoft.com/en-us/azure/ai-foundry/control-plane/quickstart-create-guardrail-policy?view=foundry&viewFallbackFrom=foundry-classic
 
-Explore model details:
+    ![Alt text](/media/CH1_Operate.png "Guardrails")
 
-<br>
+1. Click on ```Content Filters``` above the Guardrails and controls banner
 
-![Alt text](/media/CH1_ModelDetails.png "Model Details")
-<br>
+    ![Alt text](/media/CH1_ContentFilter.png "ContentFilter")
 
+1. Setup the Content filter thru the wizard.  It will ask you for Input filters, output filters and connection.  Here is a review of the setup.
 
-In the Agent playground, Connect your Agent to Tools, select Azure AI search and Add tool-
+    ![Alt text](/media/CH1_Reviews.png "ContentFilterReview")
 
-<br>
-
-![Alt text](/media/CH1_AddTool.png "AddTool")
-<br>
-
-
-On the "Create a new connection" page, Select the already created Azure AI Search resource from the dropdown and Connect-
-
-<br>
-
-![Alt text](/media/CH1_CreateConnection.png "CreateConnection")
-<br>
-
-
-Add search index - 
-
-
-<br>
-
-![Alt text](/media/CH1_AddIndex.png "AddIndex")
-<br>
-
-
-If you want to create a new index on the Azure AI Search resource, select the "Storage account" that is already created in your resource group in CH0 and select the 'content' container
-
-Before hitting the "Create index" button, go to your Azure AI Search resource, to Enable AI Search RBAC with Foundry project identity
-
-To enable RBAC:
-From the left pane, select Settings > Keys. 
-Select Both to enable both key-based and keyless authentication, which is recommended for most scenarios. 
-
-<br>
-
-![Alt text](/media/CH1_keys.png "Keys")
-<br>
-
-
-2. To assign the necessary roles: 
-
-From the left pane, select Access control (IAM). 
-Select Add > Add role assignment. 
-Assign the Search Index Data Contributor role to the managed identity of your project. 
-Repeat the role assignment for Search Service Contributor. 
-
-<br>
-
-![Alt text](/media/CH1_RoleAssignment.png "RoleAssignment")
-<br>
-
-
-Add instructions to your agent to help it invoke the right tools. 
-
-Save the agent configurations, go to the Monitor tab and Connect the agent to the App Insights resource created in CH0. 
-<br>
-
-![Alt text](/media/CH1_Monitor.png "Monitor")
-<br>
-
-
-Go back to the Foundry agent, under Knowledge, click on "Connect to Foundry IQ"
-<br>
-
-![Alt text](/media/CH1_FoundryIQ.png "FoundryIQ")
-<br>
-
-Create a new base on the Azure AI Search and save your agent
-<br>
-
-![Alt text](/media/CH1_knowledgebase.png "knowledgebase")
-<br>
-
-
-Test your agent-
-Ask some sample questions, available here - (https://github.com/Azure-Samples/azure-search-openai-demo/blob/main/evals/ground_truth.jsonl)
-
-<br>
-
-![Alt text](/media/CH1_testAgent.png "testAgent")
-<br>
-
-
-At this point, you should be able to see some Monitoring data -
-<br>
-
-![Alt text](/media/CH1_MonitorAgent.png "MonitorAgent")
-<br>
-
-
-Create a guardrail policy- 
-
-Refer - https://learn.microsoft.com/en-us/azure/ai-foundry/control-plane/quickstart-create-guardrail-policy?view=foundry
-
-<br>
-
-![Alt text](/media/CH1_Operate.png "Operate")
-<br>
-
-
-Select Operate from the upper-right navigation.
-Select Compliance in the left pane.
-Select Create policy.
-Select the controls to be added to the policy. Guardrail controls include content safety filters, prompt shields, and groundedness checks that help ensure your AI models operate safely and responsibly. These controls represent the minimum settings required for a model deployment to be considered compliant with the policy. As you configure each control, select Add control to add it to the policy.
-Select Next to move to scope selection. You can scope your policy to a single subscription or a resource group. Select the desired scope and then select a subscription or resource group from a list of resources that you have access to. We are selecting the scope at our resource level.
-Pick the desired subscription or resource group to apply to the policy and select Select.
-Select Next to add exceptions to the policy. The exception options depend on your scope selection:If you scoped to a subscription, you can create exceptions for entire resource groups or individual model deployments within that subscription.
-If you scoped to a resource group, you can only create exceptions for individual model deployments.
-Once all exceptions have been added, select Next to move to the review stage. Here, you name your policy and review the scope, exceptions, and controls that define the policy. Once ready, select Submit to create the policy.
-
-<br>
-
-![Alt text](/media/CH1_Compliance.png "Compliance")
-<br>
-
-
-Go back to the agent, and to the Evaluations tab. upload the ground_truth dataset.
-<br>
-
-![Alt text](/media/CH1_truth.png "Truth")
-<br>
-
-
-Review and run the evaluation.
-Wait for the evaluation to be completed.
-<br>
-
-![Alt text](/media/CH1_Evaluation.png "Evaluation")
-<br>
-
-
-See all metrics in the Evaluations tab -
-<br>
-
-![Alt text](/media/CH1_EvaluationMetrics.png "EvaluationMetrics")
-<br>
-
+---
 
 ## Success Criteria
 
 To successfully complete this lab, you must meet all of the following criteria:
 
-1. Successfully Migrate Azure OpenAI to Microsoft Foundry
+1. Create and activate a Foundry agent with at least one deployed model 
 
-Open the CH0 Azure OpenAI resource in Microsoft Foundry
-Complete the Azure OpenAI → Foundry migration
-Confirm Foundry project creation
+1. Integrate Azure AI Search into the Agent
 
+1. Identify the metrics for each risk in the Impact Assessment
 
-2. Create a New Agent in Foundry
+1. Apply a Guardrail Policy enforcing safety, groundedness, and prompt protections 
 
-From the Foundry portal, create an agent in the Foundry project and open the agent workspace to verify it is active.
+## Continue to Challenge 2
 
+Congratulations for completing Challenge 1 on Responsible AI.  Next challenge is [Challenge 2 (Well-Architected & Trustworthy Foundation)](/code/2_challenge/README.md).
 
-3. Verify & Deploy Models
+## Best Practices
 
-Navigate to the Models tab
-Verify deployed Azure OpenAI models appear under Deployed
-(Optional) Deploy an additional model from the Model Catalog
-
-
-4. Connect the Agent to Azure AI Search (Tools Integration)
-
-Add Azure AI Search from Tools
-Select the correct Azure AI Search resource and create or choose an index from the storage content container
-Enable Search RBAC with key and keyless auth and assign required roles to the Foundry managed identity
-Verify the tool appears in the agent with no configuration errors
-
-
-5. Add Instructions to the Agent
-
-Write clear system instructions defining when to use Azure AI Search
-Save the agent configuration with no validation errors
-
-
-6. Configure Monitoring
-
-Open the Monitor tab, connect the agent to the Application Insights resource from CH0, and confirm telemetry is active
-
-
-7. Connect Knowledge via Foundry IQ
-
-Open the Knowledge tab and connect to Foundry IQ
-Create a new Knowledge Base using the Azure AI Search index
-Save the agent successfully
-
-
-8. Test the Agent
-
-Test the agent in the playground using sample questions from ground_truth.jsonl
-Verify correct search retrieval, grounded responses, and no hallucinations
-Observe monitoring/traces appearing in the Monitor tab.
-
-
-9. Create a Guardrail Policy
-
-Navigate to Operate → Compliance and create a Guardrail Policy with safety filters, prompt shields, and groundedness controls
-Assign the policy scope to the correct subscription/resource group and submit successfully
-
-
-10. Run Evaluations
-
-Upload ground_truth.jsonl under Evaluations
-Run an evaluation job and review accuracy, groundedness, citation validity, and safety
-
+- Keep scope narrowly defined and tied to a business decision or outcome.   
+- Use retrieval (Azure AI Search) for enterprise knowledge instead of prompting static content 
+- Always write explicit system instructions to guide tool usage and reduce hallucinations 
+- Apply guardrail policies (safety, groundedness, prompt shields) before broader rollout 
+- Test with ground‑truth datasets, including edge and failure cases 
+- Treat governance, testing, and observability as first‑class features, not post‑deployment steps 
 
 
 ## Learning Resources
 
-https://learn.microsoft.com/en-us/azure/ai-foundry/control-plane/overview?view=foundry
+[Microsoft Foundry](https://learn.microsoft.com/en-us/azure/ai-foundry/what-is-azure-ai-foundry?view=foundry-classic)
+
+[Microsoft Foundry Control Plane](https://learn.microsoft.com/en-us/azure/ai-foundry/control-plane/overview?view=foundry)
  
-https://learn.microsoft.com/en-us/azure/ai-foundry/what-is-azure-ai-foundry?view=foundry-classic
- 
-https://learn.microsoft.com/en-us/azure/search/search-what-is-azure-search?tabs=indexing%2Cquickstarts
-https://learn.microsoft.com/en-us/azure/machine-learning/concept-responsible-ai?view=azureml-api-2
+[Azure AI Search](https://learn.microsoft.com/en-us/azure/search/search-what-is-azure-search?tabs=indexing%2Cquickstarts)
+
+[Impact Assessment](https://www.microsoft.com/en-us/ai/tools-practices)
+
+[Responsible AI](https://learn.microsoft.com/en-us/azure/machine-learning/concept-responsible-ai?view=azureml-api-2)
 
  
-
 #  CHALLENGE 1 COMPLETE !!!

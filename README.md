@@ -6,8 +6,6 @@ Hands-on Microhack created by Microsoft Office of the CTO Americas, focused on T
 
 ## Presented by Microsoft Americas Office of the CTO
 
-Originally from [RAGCHAT](https://aka.ms/ragchat)
-
 ## Microhack Oveview
 
 The Micohack event is designed to engage technical roles through a condensed, half-day hands-on hack experience. Leveraging the latest Microsoft technologies, this event provides participants with the opportunity to work on real-world problems, collaborate with peers, and explore innovative solutions.
@@ -93,3 +91,7 @@ trademarks or logos is subject to and must follow
 [Microsoft's Trademark & Brand Guidelines](https://www.microsoft.com/en-us/legal/intellectualproperty/trademarks/usage/general).
 Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship.
 Any use of third-party trademarks or logos are subject to those third-party's policies.
+
+# Contributors to this Microhack
+
+We are grateful to the hard-work and thought leadership done by Pamela Fox and Matt Gotteiner. We were inspired and informed by their work.  We have reused their https://aka.ms/ragchat repo and studied their podcast series RAG Deep dive http://aka.ms/ragdeepdive.  We highly recommend to watch this content when preparing your applications to move into production.
